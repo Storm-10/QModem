@@ -2118,7 +2118,7 @@ static int requestGetIPAddress(PROFILE_T *profile, int curIpFamily) {
             pIpv6->Mtu =  le32_to_cpu(pMtu->Mtu);
     }
 
-    # PDN MTU
+    // PDN MTU
     dbg_time("ipv%d mtu = %u", curIpFamily==IpFamilyV4?4:6, curIpFamily==IpFamilyV4?pIpv4->Mtu:pIpv6->Mtu);
 
     free(pResponse);
