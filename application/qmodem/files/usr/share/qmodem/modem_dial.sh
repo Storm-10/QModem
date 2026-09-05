@@ -481,7 +481,7 @@ update_config()
     config_get ra_master $modem_config ra_master
     config_get extend_prefix $modem_config extend_prefix
     config_get en_bridge $modem_config en_bridge
-    config_get do_not_add_dns $modem_config do_not_add_dns
+    config_get do_not_add_dns $modem_config do_not_add_dns 1
     config_get dns_list $modem_config dns_list
     config_get huawei_dial_mode $modem_config huawei_dial_mode
     config_get donot_nat $modem_config donot_nat 0
@@ -651,7 +651,7 @@ check_ip()
 	
         if [ -n "$ipaddr" ];then
             ipv6=$(echo $ipaddr | grep -oE "\b([0-9a-fA-F]{0,4}:){2,7}[0-9a-fA-F]{0,4}\b")
-            ipv4=$(echo $ipaddr | grep -oE "\b([0-9]{1,3}\.){3}[0-9]{1,3}\b")
+            ipv4=$(get_cgpaddr_ipv4 "$ipaddr")
             if [ "$manufacturer" = "simcom" ];then
                 ipv4=$(echo $ipaddr | grep -oE "\b([0-9]{1,3}\.){3}[0-9]{1,3}\b" | grep -v "0\.0\.0\.0" | head -n 1)
                 ipv6=$(echo $ipaddr | grep -oE "\b([0-9a-fA-F]{0,4}.){2,7}[0-9a-fA-F]{0,4}\b")
@@ -1751,7 +1751,7 @@ ip_change_fm350()
     else
         at_command="AT+CGPADDR=$pdp_index"
         response=$(cmd_dial_cgpaddr "$at_port" "$pdp_index")
-        ipv4_config=$(echo "$response" | grep "+CGPADDR:" | grep -o '"[0-9]\+\.[0-9]\+\.[0-9]\+\.[0-9]\+"' | head -1 | tr -d '"')
+        ipv4_config=$(get_cgpaddr_ipv4 "$response")
         gateway="${ipv4_config%.*}.1"
 
         response=$(cmd_dial_gtdns "$at_port" "$pdp_index")
